@@ -21,6 +21,12 @@ def create_database():
 
     except Error as e:
         print(f"Error: {e}")
+    except mysql.connector.Error as db_err:
+        print(f"Database error: {db_err}")
+    except mysql.connector.OperationalError as op_err:
+        print(f"Operational error: {op_err}")
+    except mysql.connector.ProgrammingError as prog_err:
+        print(f"Programming error: {prog_err}")
     
     finally:
         # Closing the cursor and connection

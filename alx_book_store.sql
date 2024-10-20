@@ -1,52 +1,47 @@
-"""create a book_store database"""
-
+-- Create the database
 CREATE DATABASE IF NOT EXISTS alx_book_store;
+
+-- Use the newly created database
 USE alx_book_store;
 
-"""create tables named books, authors, customers, orders, order_details respectively"""
-
-"""stores information about books avaliable in the bookstore"""
-
-CREATE TABLE IF NOT EXISTS Books (
-    book_id INT AUTO_INCREMENT PRIMARY KEY , 
-    title VARCHAR(130) NOT NULL, 
-    author_id INT FOREIGN KEY REFERENCES Authors(Author_id), 
-    price DOUBLE NOT NULL, 
-    publication_date DATE
-    );
-
-"""stores information about authors"""
-
+-- Create Authors table
 CREATE TABLE IF NOT EXISTS Authors (
     author_id INT PRIMARY KEY AUTO_INCREMENT,
-    author_name VARCHAR (215)
-);
+    author_name VARCHAR(215) NOT NULL
+) ENGINE=InnoDB;
 
-"""stores information about customers"""
+-- Create Books table
+CREATE TABLE IF NOT EXISTS Books (
+    book_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(130) NOT NULL,
+    author_id INT,
+    price DOUBLE NOT NULL,
+    publication_date DATE,
+    FOREIGN KEY (author_id) REFERENCES Authors(author_id) ON DELETE SET NULL
+) ENGINE=InnoDB;
 
+-- Create Customers table
 CREATE TABLE IF NOT EXISTS Customers (
-    customer_id INT PRIMARY KEY,
-    customer_name VARCHAR(215),
-    email VARCHAR(215),
-    address TEXT
-);
+    customer_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_name VARCHAR(215) NOT NULL,
+    email VARCHAR(215) NOT NULL UNIQUE,
+    address TEXT NOT NULL
+) ENGINE=InnoDB;
 
-"""stores information about orders placed by customers"""
-
+-- Create Orders table
 CREATE TABLE IF NOT EXISTS Orders (
-    order_id INT PRIMARY KEY,
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
     customer_id INT,
-    order_date DATE,
-    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
-);
+    order_date DATE NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
-"""stores information about the books included in each order"""
-
+-- Create Order_Details table
 CREATE TABLE IF NOT EXISTS Order_Details (
-    orderdetailid INT PRIMARY KEY,
+    orderdetailid INT PRIMARY KEY AUTO_INCREMENT,
     order_id INT,
     book_id INT,
-    quantity DOUBLE,
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
-    FOREIGN KEY (book_id) REFERENCES Books(book_id)
-);
+    quantity DOUBLE NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (book_id) REFERENCES Books(book_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
